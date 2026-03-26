@@ -1,4 +1,4 @@
-# 🎓 EdTech API - Annuaire d'Étudiants
+# 🎓 TP CI/CD Seance 1 - API Annuaire d'Étudiants
 
 [![Node.js CI](https://github.com/Migou27/CI-CDseance1/actions/workflows/ci.yml/badge.svg)](https://github.com/Migou27/CI-CDseance1/actions)
 
@@ -15,7 +15,7 @@ Une API RESTful développée en Node.js et Express pour gérer un annuaire d'ét
 `npm start` (Le serveur écoutera sur http://localhost:3000)
 
 **3. Lancer les tests et voir le coverage :**
-`npm test`
+`npm run test`
 
 **4. Lancer le linter :**
 `npm run lint`
@@ -28,7 +28,7 @@ Toutes les requêtes doivent être préfixées par `/api/students`.
 
 ### 1. Lister tous les étudiants
 * **Route :** `GET /api/students`
-* **Bonus supportés :** `?page=1&limit=10` (Pagination) et `?sort=grade&order=desc` (Tri)
+* **Pagination :** `?page=1&limit=10` (Pagination) et `?sort=grade&order=desc` (Tri)
 * **Code succès :** 200
 
 ### 2. Statistiques de la promo
