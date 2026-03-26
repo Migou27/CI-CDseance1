@@ -18,35 +18,40 @@ const validFields = ['informatique', 'mathématiques', 'physique', 'chimie'];
 
 const validateStudent = (data, studentId = null) => {
     const errors = [];
+    let hasConflict = false;
     
-    if (!data.firstName || data.firstName.length < 2) errors.push('firstName invalide');
-    if (!data.lastName || data.lastName.length < 2) errors.push('lastName invalide');
+    if (!data.firstName || typeof data.firstName !== 'string' || data.firstName.trim().length < 2) errors.push('firstName invalide (min 2 caractères)');
+    if (!data.lastName || typeof data.lastName !== 'string' || data.lastName.trim().length < 2) errors.push('lastName invalide (min 2 caractères)');
     
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!data.email || !emailRegex.test(data.email)) {
         errors.push('email invalide');
     } else {
         const emailExists = students.some(s => s.email === data.email && s.id !== studentId);
-        if (emailExists) errors.push('email déjà utilisé');
+        if (emailExists) {
+            errors.push('email déjà utilisé');
+            hasConflict = true;
+        }
     }
 
     if (data.grade === undefined || typeof data.grade !== 'number' || data.grade < 0 || data.grade > 20) {
-        errors.push('grade invalide');
+        errors.push('grade invalide (doit être entre 0 et 20)');
     }
 
     if (!data.field || !validFields.includes(data.field)) {
-        errors.push('field invalide');
+        errors.push('field invalide (doit être informatique, mathématiques, physique ou chimie)');
     }
 
-    return errors;
+    return { errors, hasConflict };
 };
 
 module.exports = {
     getAll: () => students,
     getById: (id) => students.find(s => s.id === id),
     create: (data) => {
-        const errors = validateStudent(data);
-        if (errors.length > 0) return { errors };
+        const validation = validateStudent(data);
+        if (validation.hasConflict) return { hasConflict: true, errors: validation.errors };
+        if (validation.errors.length > 0) return { errors: validation.errors };
         
         const newStudent = { id: nextId++, ...data };
         students.push(newStudent);
@@ -56,8 +61,9 @@ module.exports = {
         const index = students.findIndex(s => s.id === id);
         if (index === -1) return { notFound: true };
 
-        const errors = validateStudent(data, id);
-        if (errors.length > 0) return { errors };
+        const validation = validateStudent(data, id);
+        if (validation.hasConflict) return { hasConflict: true, errors: validation.errors };
+        if (validation.errors.length > 0) return { errors: validation.errors };
 
         students[index] = { id, ...data };
         return { student: students[index] };
@@ -69,7 +75,29 @@ module.exports = {
         students.splice(index, 1);
         return { success: true };
     },
-    // Indispensable pour réinitialiser entre chaque test
+    getStats: () => {
+        if (students.length === 0) return { totalStudents: 0, averageGrade: 0, studentsByField: {}, bestStudent: null };
+        
+        const totalStudents = students.length;
+        const sumGrades = students.reduce((sum, s) => sum + s.grade, 0);
+        const averageGrade = Number((sumGrades / totalStudents).toFixed(2));
+        
+        const studentsByField = students.reduce((acc, s) => {
+            acc[s.field] = (acc[s.field] || 0) + 1;
+            return acc;
+        }, {});
+        
+        const bestStudent = [...students].sort((a, b) => b.grade - a.grade)[0];
+        
+        return { totalStudents, averageGrade, studentsByField, bestStudent };
+    },
+    search: (query) => {
+        const lowerQuery = query.toLowerCase();
+        return students.filter(s => 
+            s.firstName.toLowerCase().includes(lowerQuery) || 
+            s.lastName.toLowerCase().includes(lowerQuery)
+        );
+    },
     reset: () => {
         students = initialStudents.map(student => ({ ...student }));
         nextId = 11;
