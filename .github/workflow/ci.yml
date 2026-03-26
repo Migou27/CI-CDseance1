@@ -1,26 +1,42 @@
 name: Node.js CI
 
+# Règle 2 : Déclenchement sur push et pull_request vers main
 on:
   push:
-    branches: [ "main", "master" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "main", "master" ]
+    branches: [ "main" ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
+    # Règle 3 : Matrix strategy avec 2 versions de Node.js (ex: 20 et 22)
     strategy:
       matrix:
-        node-version: [18.x, 20.x]
+        node-version: [20.x, 22.x]
 
+    # Règle 4 : Étapes dans l'ordre strict
     steps:
-    - uses: actions/checkout@v3
-    - name: Utiliser Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
+    # 1. Checkout
+    - name: Checkout du code
+      uses: actions/checkout@v4
+
+    # 2. Setup
+    - name: Setup de Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm ci
-    - run: npm run lint
-    - run: npm test
+        cache: 'npm' # Optimisation recommandée par GitHub
+
+    # 3. Install
+    - name: Installation des dépendances
+      run: npm ci # 'npm ci' est plus sûr que 'npm install' pour la CI
+
+    # 4. Lint
+    - name: Lancement du Linter
+      run: npm run lint
+
+    # 5. Test
+    - name: Lancement des Tests automatisés
+      run: npm test
