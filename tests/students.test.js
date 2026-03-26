@@ -20,7 +20,7 @@ describe('API Étudiants', () => {
         it('1. Doit retourner la liste des étudiants initiaux (10 étudiants)', async () => {
             const res = await request(app).get('/api/students');
             expect(res.statusCode).toBe(200);
-            expect(res.body.length).toBe(8);
+            expect(res.body.length).toBe(10);
         });
     });
 
