@@ -10,8 +10,8 @@ describe('API Étudiants', () => {
 
     const newValidStudent = {
         firstName: 'Grace',
-        lastName: 'Hopper',
-        email: 'grace@edtech.fr',
+        lastName: 'Howart',
+        email: 'grace.howart@edtech.fr',
         grade: 16,
         field: 'informatique'
     };
@@ -20,7 +20,7 @@ describe('API Étudiants', () => {
         it('1. Doit retourner la liste des étudiants initiaux (3 étudiants)', async () => {
             const res = await request(app).get('/api/students');
             expect(res.statusCode).toBe(200);
-            expect(res.body.length).toBe(3);
+            expect(res.body.length).toBe(10);
         });
     });
 
@@ -28,7 +28,7 @@ describe('API Étudiants', () => {
         it('2. Doit retourner un étudiant existant (Code 200)', async () => {
             const res = await request(app).get('/api/students/1');
             expect(res.statusCode).toBe(200);
-            expect(res.body.firstName).toBe('Ada');
+            expect(res.body.firstName).toBe('Miyabi');
         });
 
         it('3. Doit retourner 404 si l\'ID n\'existe pas', async () => {
@@ -47,7 +47,7 @@ describe('API Étudiants', () => {
         it('5. Doit créer un étudiant valide (Code 201)', async () => {
             const res = await request(app).post('/api/students').send(newValidStudent);
             expect(res.statusCode).toBe(201);
-            expect(res.body.id).toBe(4); // Car on a déjà 3 étudiants initiaux
+            expect(res.body.id).toBe(11);
             expect(res.body.firstName).toBe('Grace');
         });
 
@@ -58,16 +58,16 @@ describe('API Étudiants', () => {
 
         it('7. Doit retourner 409 si l\'email est déjà utilisé', async () => {
             // ada@edtech.fr est l'email de l'étudiant ID 1
-            const res = await request(app).post('/api/students').send({ ...newValidStudent, email: 'ada@edtech.fr' });
+            const res = await request(app).post('/api/students').send({ ...newValidStudent, email: 'yu.narukami@cicd.fr' });
             expect(res.statusCode).toBe(409);
         });
     });
 
     describe('PUT /api/students/:id', () => {
         it('8. Doit mettre à jour un étudiant existant (Code 200)', async () => {
-            const res = await request(app).put('/api/students/1').send({ ...newValidStudent, email: 'ada.new@edtech.fr' });
+            const res = await request(app).put('/api/students/1').send({ ...newValidStudent, email: 'miyabi.new@cicd.fr' });
             expect(res.statusCode).toBe(200);
-            expect(res.body.email).toBe('ada.new@edtech.fr');
+            expect(res.body.email).toBe('miyabi.new@cicd.fr');
         });
 
         it('9. Doit retourner 404 si l\'étudiant à modifier n\'existe pas', async () => {
@@ -76,8 +76,7 @@ describe('API Étudiants', () => {
         });
 
         it('10. Doit retourner 409 si le nouvel email est pris par un AUTRE étudiant', async () => {
-            // On essaie de donner l'email d'Alan (ID 2) à Ada (ID 1)
-            const res = await request(app).put('/api/students/1').send({ ...newValidStudent, email: 'alan@edtech.fr' });
+            const res = await request(app).put('/api/students/1').send({ ...newValidStudent, email: 'yu.narukami@cicd.fr' });
             expect(res.statusCode).toBe(409);
         });
     });
@@ -103,25 +102,25 @@ describe('API Étudiants', () => {
         it('13. Doit retourner les statistiques correctes (Code 200)', async () => {
             const res = await request(app).get('/api/students/stats');
             expect(res.statusCode).toBe(200);
-            expect(res.body.totalStudents).toBe(3);
-            expect(res.body.averageGrade).toBe(19); // (19 + 18 + 20) / 3 = 19
-            expect(res.body.studentsByField.informatique).toBe(1);
-            expect(res.body.bestStudent.firstName).toBe('Marie'); // Note de 20
+            expect(res.body.totalStudents).toBe(10);
+            expect(res.body.averageGrade).toBe(13.5);
+            expect(res.body.studentsByField.informatique).toBe(2);
+            expect(res.body.bestStudent.firstName).toBe('Yu');
         });
     });
 
     describe('GET /api/students/search', () => {
         it('14. Doit retourner les étudiants correspondant à la recherche (insensible à la casse)', async () => {
-            const res = await request(app).get('/api/students/search?q=ada');
+            const res = await request(app).get('/api/students/search?q=Yu');
             expect(res.statusCode).toBe(200);
             expect(res.body.length).toBe(1);
-            expect(res.body[0].firstName).toBe('Ada');
+            expect(res.body[0].firstName).toBe('Yu');
         });
 
         it('15. Doit trouver sur le nom de famille', async () => {
-            const res = await request(app).get('/api/students/search?q=turing');
+            const res = await request(app).get('/api/students/search?q=Narukami');
             expect(res.statusCode).toBe(200);
-            expect(res.body[0].lastName).toBe('Turing');
+            expect(res.body[0].lastName).toBe('Narukami');
         });
 
         it('16. Doit retourner un tableau vide si aucun résultat', async () => {

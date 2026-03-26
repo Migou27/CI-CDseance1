@@ -1,8 +1,8 @@
 const initialStudents = [
     { id: 1, firstName: 'Miyabi', lastName: 'Hoshimi', email: 'miyabi.hoshimi@cicd.fr', grade: 5, field: 'mathématiques' },
     { id: 2, firstName: 'Kazuma', lastName: 'Sato', email: 'kazuma.sato@cicd.fr', grade: 16, field: 'informatique' },
-    { id: 3, firstName: 'Yu', lastName: 'Narukami', email: 'yu.narukami@cicd.fr', grade: 20, field: 'physique' },
-    { id: 4, firstName: 'Hidetaka', lastName: 'Miyazaki', email: 'hidetaka.miyazaki@cicd.fr', grade: 20, field: 'informatique' },
+    { id: 3, firstName: 'Hidetaka', lastName: 'Miyazaki', email: 'hidetaka.miyazaki@cicd.fr', grade: 19, field: 'informatique' },
+    { id: 4, firstName: 'Yu', lastName: 'Narukami', email: 'yu.narukami@cicd.fr', grade: 20, field: 'physique' },
     { id: 5, firstName: 'Rainbow', lastName: 'Dash', email: 'rainbow.dash@cicd.fr', grade: 12, field: 'chimie' },
     { id: 6, firstName: 'Sacha', lastName: 'Ketchum', email: 'sacha.ketchum@cicd.fr', grade: 7, field: 'physique' },
     { id: 7, firstName: 'John', lastName: 'Doe', email: 'john.doe@cicd.fr', grade: 10, field: 'chimie' },
