@@ -3,7 +3,6 @@
 [![Node.js CI](https://github.com/Migou27/CI-CDseance1/actions/workflows/ci.yml/badge.svg)](https://github.com/Migou27/CI-CDseance1/actions)
 ![Coverage](https://img.shields.io/badge/Coverage-100%25-brightgreen.svg)
 ![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)
-
 ![Node.js](https://img.shields.io/badge/Node.js-20.x-green?logo=node.js)
 ![Express](https://img.shields.io/badge/Express-5.x-black?logo=express)
 ![Jest](https://img.shields.io/badge/Jest-Tests_Automatisés-C21325?logo=jest)
