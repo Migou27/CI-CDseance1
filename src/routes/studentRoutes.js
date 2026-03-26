@@ -18,7 +18,8 @@ router.get('/search', (req, res) => {
 
 // 3. GET /students
 router.get('/', (req, res) => {
-    res.status(200).json(studentsData.getAll());
+    const { page, limit, sort, order } = req.query;
+    res.status(200).json(studentsData.getAll({ page, limit, sort, order }));
 });
 
 // 4. POST /students

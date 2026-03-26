@@ -46,7 +46,30 @@ const validateStudent = (data, studentId = null) => {
 };
 
 module.exports = {
-    getAll: () => students,
+    getAll: (options = {}) => {
+        let result = [...students];
+
+        // 1. Tri (Sorting)
+        if (options.sort) {
+            const order = options.order === 'desc' ? -1 : 1;
+            result.sort((a, b) => {
+                if (a[options.sort] < b[options.sort]) return -1 * order;
+                if (a[options.sort] > b[options.sort]) return 1 * order;
+                return 0;
+            });
+        }
+
+        // 2. Pagination
+        if (options.page && options.limit) {
+            const page = parseInt(options.page) || 1;
+            const limit = parseInt(options.limit) || 10;
+            const startIndex = (page - 1) * limit;
+            const endIndex = page * limit;
+            result = result.slice(startIndex, endIndex);
+        }
+
+        return result;
+    },
     getById: (id) => students.find(s => s.id === id),
     create: (data) => {
         const validation = validateStudent(data);

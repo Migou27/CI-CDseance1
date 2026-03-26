@@ -137,4 +137,35 @@ describe('API Étudiants', () => {
             expect(res2.statusCode).toBe(400);
         });
     });
+
+    describe('Bonus : Cas limites, Pagination et Tri', () => {
+        it('18. Doit paginer les résultats (limit=2)', async () => {
+            const res = await request(app).get('/api/students?page=1&limit=2');
+            expect(res.statusCode).toBe(200);
+            expect(res.body.length).toBe(2);
+        });
+
+        it('19. Doit trier les étudiants par note décroissante', async () => {
+            const res = await request(app).get('/api/students?sort=grade&order=desc');
+            expect(res.statusCode).toBe(200);
+            expect(res.body[0].grade).toBe(20); // Marie Curie a 20
+            expect(res.body[2].grade).toBe(18); // Alan Turing a 18
+        });
+
+        it('20. Doit accepter un prénom avec caractères spéciaux (tirets, accents)', async () => {
+            const specialStudent = {
+                firstName: 'Jean-François', lastName: 'O\'Connor', email: 'jfo@edtech.fr',
+                grade: 12, field: 'chimie'
+            };
+            const res = await request(app).post('/api/students').send(specialStudent);
+            expect(res.statusCode).toBe(201);
+            expect(res.body.firstName).toBe('Jean-François');
+        });
+
+        it('21. Doit retourner 400 si le corps de la requête est totalement vide', async () => {
+            const res = await request(app).post('/api/students').send({});
+            expect(res.statusCode).toBe(400);
+            expect(res.body.errors).toBeDefined();
+        });
+    });
 });
