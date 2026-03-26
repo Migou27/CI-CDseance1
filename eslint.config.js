@@ -1,18 +1,18 @@
 module.exports = [
     {
-        // On cible tous les fichiers JavaScript
+        // On analyse tous les fichiers JS du projet
         files: ["**/*.js"],
         
         languageOptions: {
             ecmaVersion: "latest",
             sourceType: "commonjs",
-            // On déclare les variables globales pour Node.js et Jest pour éviter les fausses erreurs "undefined"
             globals: {
-                console: "readonly",
+                // Variables globales Node.js
                 process: "readonly",
                 module: "readonly",
                 require: "readonly",
-                __dirname: "readonly",
+                console: "readonly",
+                // Variables globales Jest (pour le dossier tests)
                 describe: "readonly",
                 it: "readonly",
                 expect: "readonly",
@@ -21,10 +21,18 @@ module.exports = [
         },
         
         rules: {
-            "semi": ["error", "always"],       // Point-virgule obligatoire
-            "quotes": ["error", "single"],     // Guillemets simples obligatoires
-            "no-unused-vars": "warn",          // Avertissement si une variable n'est pas utilisée
-            "no-undef": "error"                // Erreur si on utilise une variable non déclarée
+            // 1. Pas de variables inutilisées (erreur bloquante)
+            "no-unused-vars": "error",
+            
+            // 2. Indentation cohérente (ici configurée sur 4 espaces)
+            "indent": ["error", 4],
+            
+            // 3. Pas de console.log oubliés
+            "no-console": "error",
+
+            // Règles bonus de bonnes pratiques
+            "semi": ["error", "always"],
+            "quotes": ["error", "single"]
         }
     }
 ];
